@@ -135,7 +135,7 @@ export default function Layout({ children }) {
     return (
         <>
             <Head>
-                <title>Codeswear.com - wear the codes</title>
+                <title>wear e-commerce - wear the codes</title>
                 <meta name="description" content="Codeswear.com. A e-commerce website" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>

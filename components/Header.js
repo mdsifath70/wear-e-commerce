@@ -1,12 +1,16 @@
+import { deleteCookie } from 'cookies-next';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import { BiUser } from 'react-icons/bi';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import { FiShoppingCart } from 'react-icons/fi';
+import { HiOutlineLogout } from 'react-icons/hi';
 import { MdCleaningServices } from 'react-icons/md';
-import { ToastContainer } from 'react-toastify';
+import { TbLogin } from 'react-icons/tb';
+import { toast, ToastContainer } from 'react-toastify';
 import { useCartContext } from '../contexts/CartContext';
+import { useUserContext } from '../contexts/UserContext';
+import { useWindowSizeCtx } from '../contexts/WindowSizeCtx';
 import Button from './Button';
 import CartCounterBtn from './CartCounterBtn';
 import Logo from './Logo';
@@ -15,6 +19,8 @@ const navMenus = ['tshirts', 'hoodies', 'stickers', 'mugs'];
 
 export default function Header() {
     const { cart, clearCart, buyNowCart, subTotal, subTotalBuy } = useCartContext();
+    const { user, setUser } = useUserContext();
+    const { windowWidth } = useWindowSizeCtx();
     const cartRef = useRef(null);
 
     const toggleCart = () => {
@@ -29,11 +35,22 @@ export default function Header() {
         }
     };
 
+    // Logout
+    const logoutHandler = () => {
+        deleteCookie('bearer_token');
+        setUser({
+            value: null,
+        });
+        toast.success('You have successfully logged out');
+    };
+
     return (
         <header className="fixed inset-x-0 top-0 z-20 py-3 shadow-md bg-white">
             <div className="container container__space mx-auto">
-                <nav className="flex items-center flex-col sm:flex-row gap-x-6 gap-y-3">
-                    <Logo />
+                <nav className="flex items-center justify-between flex-col sm:flex-row gap-x-6 gap-y-3">
+                    <div className="mr-auto sm:mr-0">
+                        <Logo />
+                    </div>
                     <ul className="flex gap-x-4 sm:gap-x-5 flex-wrap justify-center font-medium">
                         {navMenus.map((menu, i) => {
                             return (
@@ -45,14 +62,32 @@ export default function Header() {
                             );
                         })}
                     </ul>
-                    <div className="flex gap-x-1 sm:gap-x-2 md:gap-x-4 sm:ml-auto absolute sm:static top-5 right-5">
-                        <Link href="/login">
-                            <a>
-                                <span>
-                                    <BiUser className="text-lg sm:text-xl" />
+                    <div className="flex gap-x-2 md:gap-x-4 items-center absolute sm:static top-5 right-5">
+                        {user.value ? (
+                            windowWidth > 800 ? (
+                                <Button className="leading-none" onClick={logoutHandler}>
+                                    logout <HiOutlineLogout />
+                                </Button>
+                            ) : (
+                                <span className="relative cursor-pointer" onClick={logoutHandler}>
+                                    <HiOutlineLogout className="text-lg sm:text-xl" />
                                 </span>
-                            </a>
-                        </Link>
+                            )
+                        ) : windowWidth > 800 ? (
+                            <Link href="/login">
+                                <a className="rounded focus:ring-2 ring-indigo-500 ring-offset-2 transition">
+                                    <Button as="a" className="leading-none">
+                                        login <TbLogin />
+                                    </Button>
+                                </a>
+                            </Link>
+                        ) : (
+                            <Link href="/login">
+                                <a className="relative cursor-pointer">
+                                    <TbLogin className="text-lg sm:text-xl" />
+                                </a>
+                            </Link>
+                        )}
                         <span className="relative cursor-pointer" onClick={toggleCart}>
                             <span className="p-1 absolute -right-3 -top-3 rounded-full bg-indigo-500 text-white text-xs md:text-sm font-mono leading-[1]">
                                 {Object.keys(buyNowCart).length || Object.keys(cart).length}
@@ -123,7 +158,10 @@ export default function Header() {
                                 </h2>
                                 <div className="flex gap-3 justify-center">
                                     <Link href="/checkout">
-                                        <a onClick={toggleCart}>
+                                        <a
+                                            onClick={toggleCart}
+                                            className="rounded focus:ring-2 ring-indigo-500 ring-offset-2 transition"
+                                        >
                                             <Button as="a">
                                                 <BsFillCartCheckFill />
                                                 Checkout

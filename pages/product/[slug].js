@@ -14,7 +14,7 @@ export async function getServerSideProps(context) {
         mongoose.connect(process.env.MONGO_URI);
     }
     const product = await ProductModel.findOne({ slug: context.params.slug });
-    const allProducts = await ProductModel.find({ title: product.title });
+    const allProducts = await ProductModel.find({ title: product.title, category: product.category });
 
     // Variants
     let variants = {};
@@ -59,7 +59,7 @@ export default function Slug({ product, variants, sizes }) {
 
     const checkServiceAbility = async (e) => {
         e.preventDefault();
-        const pins = await fetch('http://localhost:3000/api/pinCodes');
+        const pins = await fetch('/api/pinCodes');
         const { pinCodes } = await pins.json();
         if (pinCodes.includes(Number(pinCode))) {
             setIsService(true);

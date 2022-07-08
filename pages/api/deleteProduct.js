@@ -1,9 +1,11 @@
-import dbConnect from '../../middlewares/db';
 import ProductModel from '../../models/ProductModel';
+import dbConnect from '../../utils/db';
 
 async function handler(req, res) {
     if (req.method === 'DELETE') {
         try {
+            dbConnect();
+
             const { id } = req.body;
             const product = await ProductModel.findByIdAndDelete(id);
 
@@ -24,4 +26,4 @@ async function handler(req, res) {
     }
 }
 
-export default dbConnect(handler);
+export default handler;
