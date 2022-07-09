@@ -1,3 +1,9 @@
+import SectionCon from '../components/SectionCon';
+
 export default function About() {
-    return <div>About</div>;
+    return (
+        <SectionCon>
+            <h1>About</h1>
+        </SectionCon>
+    );
 }

@@ -1,13 +1,16 @@
 import { deleteCookie } from 'cookies-next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { BsFillCartCheckFill } from 'react-icons/bs';
+import { CgProfile } from 'react-icons/cg';
 import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { MdCleaningServices } from 'react-icons/md';
 import { TbLogin } from 'react-icons/tb';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useCartContext } from '../contexts/CartContext';
 import { useUserContext } from '../contexts/UserContext';
 import { useWindowSizeCtx } from '../contexts/WindowSizeCtx';
@@ -22,6 +25,7 @@ export default function Header() {
     const { user, setUser } = useUserContext();
     const { windowWidth } = useWindowSizeCtx();
     const cartRef = useRef(null);
+    const router = useRouter();
 
     const toggleCart = () => {
         const classes = cartRef.current.classList;
@@ -42,12 +46,13 @@ export default function Header() {
             value: null,
         });
         toast.success('You have successfully logged out');
+        router.push('/');
     };
 
     return (
         <header className="fixed inset-x-0 top-0 z-20 py-3 shadow-md bg-white">
             <div className="container container__space mx-auto">
-                <nav className="flex items-center justify-between flex-col sm:flex-row gap-x-6 gap-y-3">
+                <nav className="flex items-center justify-between flex-col md:flex-row gap-x-6 gap-y-3">
                     <div className="mr-auto sm:mr-0">
                         <Logo />
                     </div>
@@ -62,17 +67,32 @@ export default function Header() {
                             );
                         })}
                     </ul>
-                    <div className="flex gap-x-2 md:gap-x-4 items-center absolute sm:static top-5 right-5">
+                    <div className="flex gap-x-2 md:gap-x-4 items-center absolute right-5 sm:right-7 md:static">
                         {user.value ? (
-                            windowWidth > 800 ? (
-                                <Button className="leading-none" onClick={logoutHandler}>
-                                    logout <HiOutlineLogout />
-                                </Button>
-                            ) : (
-                                <span className="relative cursor-pointer" onClick={logoutHandler}>
-                                    <HiOutlineLogout className="text-lg sm:text-xl" />
-                                </span>
-                            )
+                            <div className="relative group">
+                                <div className="flex items-center gap-x-2 bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded cursor-default">
+                                    {windowWidth >= 1024 && <h3 className="whitespace-nowrap">Md. Abdul kalam</h3>}
+                                    <CgProfile />
+                                </div>
+                                <ul className="absolute right-0 lg:left-0 m-w-max bg-white shadow-xl rounded py-2 border whitespace-nowrap transition scale-y-0 group-hover:scale-y-100 origin-top">
+                                    <li>
+                                        <Link href="/profile">
+                                            <a className="block px-4 py-1 hover:bg-indigo-100">My profile</a>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/orders">
+                                            <a className="block px-4 py-1 hover:bg-indigo-100">My orders</a>
+                                        </Link>
+                                    </li>
+                                    <li
+                                        className="flex items-center gap-x-2 cursor-pointer px-4 py-1 hover:bg-indigo-100"
+                                        onClick={logoutHandler}
+                                    >
+                                        logout <HiOutlineLogout />
+                                    </li>
+                                </ul>
+                            </div>
                         ) : windowWidth > 800 ? (
                             <Link href="/login">
                                 <a className="rounded focus:ring-2 ring-indigo-500 ring-offset-2 transition">

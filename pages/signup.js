@@ -1,11 +1,10 @@
-import { hasCookie, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import SectionCon from '../components/SectionCon';
 
 export default function Signup() {
     const [user, setUser] = useState({
@@ -13,14 +12,6 @@ export default function Signup() {
         email: '',
         password: '',
     });
-    const router = useRouter();
-
-    // Redirect if login
-    useEffect(() => {
-        if (hasCookie('bearer_token')) {
-            router.push('/');
-        }
-    }, [router]);
 
     const inputOnchangeHandler = (e) => {
         setUser((prevState) => ({
@@ -62,58 +53,56 @@ export default function Signup() {
     };
 
     return (
-        <section>
-            <div className="container container__space py-8 mx-auto">
-                <h1 className="text-2xl font-medium text-center mb-6">Signup</h1>
-                <form onSubmit={onSubmitHandler} className="max-w-xl mx-auto space-y-4">
-                    <div>
-                        <label className="flex-grow space-y-2">
-                            <span className="after:content-['*'] after:ml-1 after:text-red-500">Name</span>
-                            <Input
-                                type="text"
-                                name="userName"
-                                placeholder="Enter your name"
-                                value={userName}
-                                onChange={inputOnchangeHandler}
-                            />
-                        </label>
-                    </div>
-                    <div>
-                        <label className="flex-grow space-y-2">
-                            <span className="after:content-['*'] after:ml-1 after:text-red-500">Email</span>
-                            <Input
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={inputOnchangeHandler}
-                            />
-                        </label>
-                    </div>
-                    <div>
-                        <label className="flex-grow space-y-2">
-                            <span className="after:content-['*'] after:ml-1 after:text-red-500">Password</span>
-                            <Input
-                                type="password"
-                                name="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={inputOnchangeHandler}
-                            />
-                        </label>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <Button type="submit" className="text-sm">
-                            Sign up
-                        </Button>
-                        <Link href="/login">
-                            <a className="text-indigo-600 hover:underline hover:underline-offset-4">
-                                Not have an account? Login
-                            </a>
-                        </Link>
-                    </div>
-                </form>
-            </div>
-        </section>
+        <SectionCon>
+            <h1 className="text-2xl font-medium text-center mb-6">Signup</h1>
+            <form onSubmit={onSubmitHandler} className="max-w-xl mx-auto space-y-4">
+                <div>
+                    <label className="flex-grow space-y-2">
+                        <span className="after:content-['*'] after:ml-1 after:text-red-500">Name</span>
+                        <Input
+                            type="text"
+                            name="userName"
+                            placeholder="Enter your name"
+                            value={userName}
+                            onChange={inputOnchangeHandler}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label className="flex-grow space-y-2">
+                        <span className="after:content-['*'] after:ml-1 after:text-red-500">Email</span>
+                        <Input
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={inputOnchangeHandler}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label className="flex-grow space-y-2">
+                        <span className="after:content-['*'] after:ml-1 after:text-red-500">Password</span>
+                        <Input
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={inputOnchangeHandler}
+                        />
+                    </label>
+                </div>
+                <div className="flex items-center justify-between">
+                    <Button type="submit" className="text-sm">
+                        Sign up
+                    </Button>
+                    <Link href="/login">
+                        <a className="text-indigo-600 hover:underline hover:underline-offset-4">
+                            Not have an account? Login
+                        </a>
+                    </Link>
+                </div>
+            </form>
+        </SectionCon>
     );
 }
